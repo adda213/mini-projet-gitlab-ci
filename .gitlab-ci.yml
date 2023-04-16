@@ -39,7 +39,7 @@ docker-build:
   stage: build
   script:
     - docker build -t  nginx:v1 .
-    - docker save webapp > webapp.tar
+    - docker save nginx:v1 > webapp.tar
   artifacts:
     paths:
       - webapp.tar    
