@@ -1,13 +1,15 @@
 variables:
-  APP_NAME: adda
+  APP_NAME: adda-staticwebsite
   REVIEW_APP_NAME: adda-${CI_COMMIT_REF_NAME}
   REVIEW_API_ENDPOINT: ip10-0-0-3-cgu09cabihn0qm0bq1gg-1993.direct.docker.labs.eazytraining.fr
   REVIEW_APP_ENDPOINT: ip10-0-0-3-cgu09cabihn0qm0bq1gg-80.direct.docker.labs.eazytraining.fr
   IP_EAZY: ip10-0-0-3-cgtukrqbihn0qm0bq19g
   REPOSITORY_ADRESS: direct.docker.labs.eazytraining.fr
+  API_PORT: 1993
+   API_ENDPOINT: ${IP_EAZY}-${API_PORT}.${REPOSITORY_ADRESS}
   INTERNAL_PORT: 80
   TEST_PORT: 90
-  EXTERNAL_PORT: 8080
+  STG_EXTERNAL_PORT: 8080
   CONTAINER_IMAGE: ${IMAGE_NAME}:${CI_COMMIT_REF_NAME}
 
 image: docker:latest
@@ -73,7 +75,7 @@ deploy staging:
     - master
   script:
     - apk --no-cache add curl
-    - 'curl -X POST http://${REVIEW_API_ENDPOINT}/staging -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\" \"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"2>&1 | grep 200'
+    - 'curl -v -X POST http://${API_ENDPOINT}/staging -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${STG_EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"  2>&1 | grep 200'
 
 deploy prod:
   stage: Deploy prod
@@ -84,8 +86,7 @@ deploy prod:
     - master
   script:
     - apk --no-cache add curl
-    - 'curl -X POST http://${PROD_API_ENDPOINT}/prod -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"'
-
+    - 'curl -v -X POST http://${API_ENDPOINT}/staging -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${STG_EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"  2>&1 | grep 200'
 
 deploy review:
   stage: Deploy review
