@@ -52,9 +52,9 @@ test acceptation:
   script:
     - docker load < webapp-adda213.tar
     - docker run -d -p ${TEST_PORT}:${INTERNAL_PORT} -e --name nginx:v1 webapp-adda213
-    - sleep 5
     - apk --no-cache add curl
-    - curl "http://docker:${TEST_PORT}" | grep -i "Hello world!"
+    - sleep 5
+    - curl "http://docker:${TEST_PORT}" | grep -i "dimension"
 
 release image:
   stage: Release image
