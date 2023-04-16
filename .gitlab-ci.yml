@@ -51,7 +51,7 @@ test acceptation:
   stage: Test acceptation
   script:
     - docker load < ${APP_NAME}.tar
-    - docker run -d -p ${TEST_PORT}:${INTERNAL_PORT} -e --name webapp ${APP_NAME}
+    - docker run -d -p ${TEST_PORT}:${INTERNAL_PORT} -e --name webapp1 ${APP_NAME}
     - apk --no-cache add curl
     - sleep 5
     - curl "http://docker:${TEST_PORT}" | grep -i "dimension"
