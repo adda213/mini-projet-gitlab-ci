@@ -50,7 +50,7 @@ test acceptation:
   stage: Test acceptation
   script:
     - docker load < webapp-adda213.tar
-    - docker run -d -p 80:8080 -e --name webapp-adda213 nginx:v1
+    - docker run -d -p 80:8080 -e --name nginx:v1 webapp-adda213
     - sleep 5
     - apk --no-cache add curl
     - curl "http://docker" | grep  "Hello world!"
