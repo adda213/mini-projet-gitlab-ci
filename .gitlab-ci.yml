@@ -1,8 +1,8 @@
 variables:
   APP_NAME: adda
   REVIEW_APP_NAME: adda-${CI_COMMIT_REF_NAME}
-  REVIEW_API_ENDPOINT: ip10-0-3-3-cgts7j2bihn0qm0bq130-1993.direct.docker.labs.eazytraining.fr
-  REVIEW_APP_ENDPOINT: ip10-0-3-3-cgts7j2bihn0qm0bq130-80.direct.docker.labs.eazytraining.fr
+  REVIEW_API_ENDPOINT: iip10-0-0-3-cgtu1habihn0qm0bq150-1993.direct.docker.labs.eazytraining.fr
+  REVIEW_APP_ENDPOINT: ip10-0-0-3-cgtu1habihn0qm0bq150-80.direct.docker.labs.eazytraining.fr
   STG_API_ENDPOINT: ip10-0-3-4-cgtref2bihn0qm0bq100-1993.direct.docker.labs.eazytraining.fr
   STG_APP_ENDPOINT: ip10-0-2-4-cgq61aqbihn0qm0bpqng-80.direct.docker.labs.eazytraining.fr
   PROD_API_ENDPOINT: ip10-0-3-5-cgtref2bihn0qm0bq100-1993.direct.docker.labs.eazytraining.fr
@@ -66,7 +66,7 @@ release image:
     - docker push "${IMAGE_NAME}:${CI_COMMIT_REF_NAME}"
     - docker push "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}"
 
-.deploy staging:
+deploy staging:
   stage: Deploy staging
   environment:
     name: staging
