@@ -10,6 +10,7 @@ variables:
   INTERNAL_PORT: 80
   TEST_PORT: 90
   STG_EXTERNAL_PORT: 8080
+  PROD_EXTERNAL_PORT: 80
   CONTAINER_IMAGE: ${IMAGE_NAME}:${CI_COMMIT_REF_NAME}
 
 image: docker:latest
@@ -81,12 +82,12 @@ deploy prod:
   stage: Deploy prod
   environment:
     name: prod
-    url: http://${PROD_APP_ENDPOINT}
+    url: http://${IP_EAZY}-${PROD_EXTERNAL_PORT}.${REPOSITORY_ADRESS}
   only:
     - master
   script:
     - apk --no-cache add curl
-    - 'curl -v -X POST http://${API_ENDPOINT}/staging -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${STG_EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"  2>&1 | grep 200'
+    - 'curl -v -X POST http://${API_ENDPOINT}/prod -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${PROD_EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"  2>&1 | grep 200'
 
 deploy review:
   stage: Deploy review
