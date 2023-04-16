@@ -71,7 +71,7 @@ deploy staging:
   stage: Deploy staging
   environment:
     name: staging
-    url: http://${IP_EAZY}-${EXTERNAL_PORT}.${REPOSITORY_ADRESS}
+    url: http://${IP_EAZY}-${STG_EXTERNAL_PORT}.${REPOSITORY_ADRESS}
   only : 
     - master
   script:
