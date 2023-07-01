@@ -1,9 +1,9 @@
 variables:
   APP_NAME: adda-staticwebsite
   REVIEW_APP_NAME: adda-${CI_COMMIT_REF_NAME}
-  REVIEW_API_ENDPOINT: ip10-0-0-3-cgu09cabihn0qm0bq1gg-1993.direct.docker.labs.eazytraining.fr
-  REVIEW_APP_ENDPOINT: ip10-0-0-3-cgu09cabihn0qm0bq1gg-80.direct.docker.labs.eazytraining.fr
-  IP_EAZY: ip10-0-0-3-cgtukrqbihn0qm0bq19g
+  REVIEW_API_ENDPOINT: ip10-0-2-3-cig5uq1906p0qa3dudk0-1993.direct.docker.labs.eazytraining.fr
+  REVIEW_APP_ENDPOINT: ip10-0-2-3-cig5uq1906p0qa3dudk0-80.direct.docker.labs.eazytraining.fr
+  IP_EAZY: ip10-0-2-3-cig5uq1906p0qa3dudk0
   REPOSITORY_ADRESS: direct.docker.labs.eazytraining.fr
   API_PORT: 1993
   API_ENDPOINT: ${IP_EAZY}-${API_PORT}.${REPOSITORY_ADRESS}
