@@ -123,12 +123,12 @@ test staging:
   <<: *test
   stage: Test staging
   only:
-  - eazylabs
+  - master
   variables:
     DOMAIN: ${STG_APP_ENDPOINT}
 
 
-.test prod:
+test prod:
   <<: *test
   stage: Test prod
   only:
