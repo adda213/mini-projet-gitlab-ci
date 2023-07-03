@@ -65,7 +65,7 @@ release image: # l'enregistrement de l'image de l'application dans le registry d
     - docker push "${IMAGE_NAME}:${CI_COMMIT_REF_NAME}"
     - docker push "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}"
 
-deploy staging: #déployement de l'application pour la partie staging ( devloppeurs et manager ) 
+deploy staging: 
   stage: Deploy staging
   environment:
     name: staging
@@ -75,6 +75,7 @@ deploy staging: #déployement de l'application pour la partie staging ( devloppe
   script:
     - apk --no-cache add curl
     - 'curl -v -X POST http://${API_ENDPOINT}/staging -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${STG_EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"  2>&1 | grep 200'
+
 
 deploy prod: #déployement de l'application pour la partie production ( client final ou le consommateur der l'application ) 
   stage: Deploy prod
