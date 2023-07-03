@@ -77,7 +77,7 @@ stages: # les étape de la pipline et l'ordre de l'execution
     - 'curl -v -X POST http://${API_ENDPOINT}/staging -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${STG_EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"  2>&1 | grep 200'
 
 
-.deploy prod: #déployement de l'application pour la partie production ( client final ou le consommateur der l'application ) 
+deploy prod: #déployement de l'application pour la partie production ( client final ou le consommateur der l'application ) 
   stage: Deploy prod
   environment:
     name: prod
@@ -127,10 +127,10 @@ test staging:
     DOMAIN: ${IP_EAZY}-${STG_EXTERNAL_PORT}.${REPOSITORY_ADRESS}
 
 
-.test prod:
+test prod:
   <<: *test
   stage: Test prod
   only:
     - master  
   variables:
-    DOMAIN: ${API_ENDPOINT}
+    DOMAIN: ${IP_EAZY}-${PROD_EXTERNAL_PORT}.${REPOSITORY_ADRESS}
