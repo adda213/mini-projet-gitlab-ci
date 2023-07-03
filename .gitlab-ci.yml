@@ -1,9 +1,7 @@
-variables:
-  APP_NAME: adda-staticwebsite
+variables: #varibales déclaré valable pour tout le pipline
+  APP_NAME: adda-staticwebsite 
   REVIEW_APP_NAME: adda-${CI_COMMIT_REF_NAME}
-  REVIEW_API_ENDPOINT: ip10-0-2-3-cig5uq1906p0qa3dudk0-1993.direct.docker.labs.eazytraining.fr
-  REVIEW_APP_ENDPOINT: ip10-0-2-3-cig5uq1906p0qa3dudk0-80.direct.docker.labs.eazytraining.fr
-  IP_EAZY: ip10-0-2-3-cig5uq1906p0qa3dudk0
+  IP_EAZY: ip10-0-3-3-cignl21906p0qa3duefg
   REPOSITORY_ADRESS: direct.docker.labs.eazytraining.fr
   API_PORT: 1993
   API_ENDPOINT: ${IP_EAZY}-${API_PORT}.${REPOSITORY_ADRESS}
@@ -13,13 +11,13 @@ variables:
   PROD_EXTERNAL_PORT: 80
   CONTAINER_IMAGE: ${IMAGE_NAME}:${CI_COMMIT_REF_NAME}
 
-image: docker:latest
+image: docker:latest #image a utiliser pour l'executuion des stages 
 services:
-  - name: docker:dind
+  - name: docker:dind # le type de service docker in docker pour faciliter la creation des conteneur et permetre la connexion entre eux
     alias: docker
 
 
-stages:
+stages: # les étape de la pipline et l'ordre de l'execution
   - build
   - Test acceptation
   - Release image
@@ -36,18 +34,18 @@ stages:
     - apk --no-cache add curl
     - curl -k "https://$DOMAIN" | grep "Hello world!"
 
-docker-build:
+docker-build: #creation de l'image par l'utilisation du Dockerfile du repository
   # Use the official docker image.
   stage: build
   script:
     - docker build -t  ${APP_NAME} .
     - docker save ${APP_NAME} > ${APP_NAME}.tar
-  artifacts:
+  artifacts: # enregistrer l'image buildé pour la suite , cette étape est essentiel pour rendre l'image disponoble pour le reste du pipeline
     paths:
       - ${APP_NAME}.tar    
 
 
-test acceptation:
+test acceptation: #tester le bon fonctionnement de l'application contenerisée 
   # Official docker image.
   stage: Test acceptation
   script:
@@ -57,7 +55,7 @@ test acceptation:
     - sleep 5
     - curl "http://docker:${TEST_PORT}" | grep -i "dimension"
 
-release image:
+release image: # l'enregistrement de l'image de l'application dans le registry de Gitlab apes le test
   stage: Release image
   script:
     - docker load < ${APP_NAME}.tar
@@ -67,7 +65,7 @@ release image:
     - docker push "${IMAGE_NAME}:${CI_COMMIT_REF_NAME}"
     - docker push "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}"
 
-deploy staging:
+deploy staging: #déployement de l'application pour la partie staging ( devloppeurs et manager ) 
   stage: Deploy staging
   environment:
     name: staging
@@ -78,7 +76,7 @@ deploy staging:
     - apk --no-cache add curl
     - 'curl -v -X POST http://${API_ENDPOINT}/staging -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${STG_EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"  2>&1 | grep 200'
 
-deploy prod:
+deploy prod: #déployement de l'application pour la partie production ( client final ou le consommateur der l'application ) 
   stage: Deploy prod
   environment:
     name: prod
