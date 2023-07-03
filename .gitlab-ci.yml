@@ -32,7 +32,7 @@ stages: # les étape de la pipline et l'ordre de l'execution
   image: alpine
   script:
     - apk --no-cache add curl
-    - curl -k "https://$DOMAIN" | grep "Hello world!"
+    - curl -k "https://$DOMAIN" | grep -i "dimension"
 
 docker-build: #creation de l'image par l'utilisation du Dockerfile du repository
   # Use the official docker image.
