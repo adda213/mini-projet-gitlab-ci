@@ -123,7 +123,7 @@ test staging:
   only:
   - master
   variables:
-    DOMAIN: ${API_ENDPOINT}
+    DOMAIN: http://${IP_EAZY}-${PROD_EXTERNAL_PORT}.${REPOSITORY_ADRESS}
 
 
 test prod:
