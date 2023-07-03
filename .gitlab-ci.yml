@@ -34,7 +34,7 @@ stages: # les étape de la pipline et l'ordre de l'execution
     - apk --no-cache add curl
     - curl -k "https://$DOMAIN" | grep -i "dimension"
 
-docker-build: #creation de l'image par l'utilisation du Dockerfile du repository
+.docker-build: #creation de l'image par l'utilisation du Dockerfile du repository
   # Use the official docker image.
   stage: build
   script:
@@ -45,7 +45,7 @@ docker-build: #creation de l'image par l'utilisation du Dockerfile du repository
       - ${APP_NAME}.tar    
 
 
-test acceptation: #tester le bon fonctionnement de l'application contenerisée 
+.test acceptation: #tester le bon fonctionnement de l'application contenerisée 
   # Official docker image.
   stage: Test acceptation
   script:
@@ -55,7 +55,7 @@ test acceptation: #tester le bon fonctionnement de l'application contenerisée
     - sleep 5
     - curl "http://docker:${TEST_PORT}" | grep -i "dimension"
 
-release image: # l'enregistrement de l'image de l'application dans le registry de Gitlab apes le test
+.release image: # l'enregistrement de l'image de l'application dans le registry de Gitlab apes le test
   stage: Release image
   script:
     - docker load < ${APP_NAME}.tar
@@ -65,7 +65,7 @@ release image: # l'enregistrement de l'image de l'application dans le registry d
     - docker push "${IMAGE_NAME}:${CI_COMMIT_REF_NAME}"
     - docker push "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}"
 
-deploy staging: 
+.deploy staging: 
   stage: Deploy staging
   environment:
     name: staging
@@ -77,7 +77,7 @@ deploy staging:
     - 'curl -v -X POST http://${API_ENDPOINT}/staging -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${STG_EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"  2>&1 | grep 200'
 
 
-deploy prod: #déployement de l'application pour la partie production ( client final ou le consommateur der l'application ) 
+.deploy prod: #déployement de l'application pour la partie production ( client final ou le consommateur der l'application ) 
   stage: Deploy prod
   environment:
     name: prod
@@ -88,7 +88,7 @@ deploy prod: #déployement de l'application pour la partie production ( client f
     - apk --no-cache add curl
     - 'curl -v -X POST http://${API_ENDPOINT}/prod -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${PROD_EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"  2>&1 | grep 200'
 
-deploy review:
+.deploy review:
   stage: Deploy review
   environment:
     name: review/$CI_COMMIT_REF_NAME
@@ -103,7 +103,7 @@ deploy review:
     - echo $APP_NAME
     - 'curl -X POST http://${REVIEW_API_ENDPOINT}/review -H "Content-Type: application/json" -d "{\"your_name\":\"${APP_NAME}\",\"container_image\":\"${CONTAINER_IMAGE}\", \"external_port\":\"${EXTERNAL_PORT}\", \"internal_port\":\"${INTERNAL_PORT}\"}"'
 
-stop review:
+.stop review:
   stage: Stop review
   variables:
     GIT_STRATEGY: none
@@ -124,10 +124,10 @@ test staging:
   only:
   - master
   variables:
-    DOMAIN: http://${IP_EAZY}-${PROD_EXTERNAL_PORT}.${REPOSITORY_ADRESS}
+    DOMAIN: ${IP_EAZY}-${PROD_EXTERNAL_PORT}.${REPOSITORY_ADRESS}
 
 
-test prod:
+.test prod:
   <<: *test
   stage: Test prod
   only:
