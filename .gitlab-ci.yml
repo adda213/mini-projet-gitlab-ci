@@ -123,7 +123,7 @@ test staging:
   only:
   - master
   variables:
-    DOMAIN: ${STG_APP_ENDPOINT}
+    DOMAIN: ${API_ENDPOINT}
 
 
 test prod:
@@ -132,4 +132,4 @@ test prod:
   only:
     - master  
   variables:
-    DOMAIN: ${PROD_APP_ENDPOINT}
+    DOMAIN: ${API_ENDPOINT}
