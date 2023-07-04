@@ -1,7 +1,7 @@
-# student-list PROJECT
+# PIPLINE WEBAPP SUR GITLAB-CI
 
-Ce repository est une simple application qui permet d'afficher une liste d'étudiant  en utilisant une API délivré par un developpeur et un webserver PHP
-![project](https://user-images.githubusercontent.com/18481009/84582395-ba230b00-adeb-11ea-9453-22ed1be7e268.jpg)
+le but de ce projet est de creer conteneriser notre application , et la faire passer par les difrentes stages du pipline qui nous permettre de tester , deployer correctement notre application 
+
 
 
 ------------
