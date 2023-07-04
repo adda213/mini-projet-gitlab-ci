@@ -1,92 +1,125 @@
-# mini-projet-gitlab
+# student-list PROJECT
+
+Ce repository est une simple application qui permet d'afficher une liste d'étudiant  en utilisant une API délivré par un developpeur et un webserver PHP
+![project](https://user-images.githubusercontent.com/18481009/84582395-ba230b00-adeb-11ea-9453-22ed1be7e268.jpg)
 
 
+------------
 
-## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## creation d'une image docker pour notre API aveec un test 
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Ce repository est une simple application qui permet d'afficher une liste d'étudiant à l'aide d'une API et un webserver PHP
+La création de notre API se fait par les étapes suivantes : 
 
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+-  création d'un fichier ***Dockerfile*** dans le dossier simple api et respecter les étapes de build indiqué dans le repository suivant : [here](https://github.com/diranetafen/student-list.git "here")
+- la création de l'image avec la ligne de commande suivante dans le terminal (machine sous CentOS7 avec docker déjà installé), à ne pas oublier que la commande doit être exécutée dans le répertoire du ficher Dockerfile : 
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/eazytraining830214/mini-projet-gitlab.git
-git branch -M main
-git push -uf origin main
+docker build -t pozos:v1 .
+```
+- démarrer le conteneur qui contient l'application après la création de l'image (POZOS) (à ne pas oublier de monter le volume qui contient les fichiers de l'API dans le dossier spécifié par les développeurs) : 
+
+```
+docker run --name pozos -d -p 80:5000 -v ./:/data/ pozos:v1
+```
+- tester le fonctionnement de l'application avec la commande suivante (host API est indiqué sur  3: enp0s8 en utilisant la commande ` ip a;`):
+
+```
+curl -u toto:python -X GET http://<host IP>:<API exposed port>/pozos/api/v1.0/get_student_ages
+```
+- le résultat de cette ligne de commande doit être cette liste : 
+```
+{
+  "student_ages": {
+    "alice": "12", 
+    "bob": "13"
+  }
+}
 ```
 
-## Integrate with your tools
+- supprimer le conteneur après le bon fonctionnement du test avec la commande suivante : 
+```
+docker ps  #pour récupérer ID du conteneur
+docker rm <ID conteneur> 
+```
 
-- [ ] [Set up project integrations](https://gitlab.com/eazytraining830214/mini-projet-gitlab/-/settings/integrations)
+### création de l'infrastructure à l'aide de docker compose
 
-## Collaborate with your team
+Dans cette partie de ce projet, nous allons créer le site qui permettre d'afficher la liste d’étudiant, le site est tout simplement un conteneur crée à la base d'une image PHP qui permettre de lire le ficher PHP crée par le développeur de l'application et afficher la liste des étudiant, nous allons suivre les étapes suivantes : 
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- création du ficher ***docker-compose.yml*** :
+```
+vi docker-compose.yml
+```
+Dans notre cas, pozos représente l’API, et PHP représente le website
 
-## Test and Deploy
+POZOS : ne pas oublier à monter le volume qui contient les ficher de l’API.
 
-Use the built-in continuous integration in GitLab.
+![image](https://github.com/adda213/mini-projet-docker/assets/123883398/cfce9f0f-9dda-4098-88ef-66d856c5c7eb)
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
 
-***
+PHP : le username est toto , password est python 
 
-# Editing this README
+![image](https://github.com/adda213/mini-projet-docker/assets/123883398/f2c2c8ff-d576-43d8-b364-20a13bf4f1cf)
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- avant de lancer le docker compose ne pas oublier de modifier la ligne 29 dans le ficher student-list/website/index.php avec les bon paramètres (HOST API, Port), exécutez le docker compose à l'aide de la ligne de commande suivante : 
 
-## Name
-Choose a self-explaining name for your project.
+```
+Docker compose up -d
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- vérifier que le site est fonctionnel, et le résultat doit être comme suit : 
+![22](https://github.com/adda213/mini-projet-docker/assets/123883398/465d8afa-c04d-41c4-bf97-54309c7b5fb4)
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## CREATION D'UN REGISTRY LOCAL 
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Apres la création et le test de notre application , nous allons stocké notre image que nous avons testé dans un  registry et afficher à l'aide d'une interface d'usage toutes les images que nous avons stocké .
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+![image](https://github.com/adda213/mini-projet-docker/assets/123883398/8289f5bc-2ade-4ed5-a9aa-cab40d9ea24f)
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+- image : représente l'image de l'application et la version de REGISTRY utilisé pour créer le conteneur registry, 
+- volume : représente le volume monté dans le conteur qui permettre le stockage des images localement.
+- ports : 5000 à gauche représente le ports externe, 5000 à droite représente le port interne
+- network : représente le réseau qui contient notre conteneur, ce réseau est ajouté afin de créer une communication interne entre le registry , et l'interface d'usage .
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## CREATION D'UNE INTERFACE D'USAGE
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Cette interface va nous permettre de nous afficher toute images stocké dans le registry local, et permettre aussi de gérer les images par l'ajout des variables d'environnement qui reste optionnel dans ce projet . 
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+![image](https://github.com/adda213/mini-projet-docker/assets/123883398/e0cbb06a-2160-4ab8-a76e-ffaa57d135e1)
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+- image : représente l'image de l'application et la version de REGISTRY_UI utilisé pour créer le conteneur.
+- ports : 4000 à gauche représente le ports externe, 80 à droite représente le port interne
+- environnement : représente les variable d'environnement indispensable et optionnel 
+    REGISTRY_TITLE : le titre du REGISTRY_UI
+    NGINX_PROXY_PASS_URL : Mettez à jour la configuration Nginx par défaut et définissez le proxy_pass sur votre registre backend      docker
+    SINGLE_REGISTRY : permettre d'autoriser ou non de changer dynamiquement le REGISTRY URL (en cas plusieurs registry)
+    SHOW_CONTENT_DIGEST : permet de voir le détail du docker tags 
+    
+Après la modification du ficher docker compose, il faut le relancer en utilisant la commande suivante : 
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```
+Docker compose up -d
+```
+Créer un nouveau tag pour l'image pozos : 
+```
+docker tag pozos:v1 localhost:5000/pozos:v1
+```
+Pousser l'application dans le registry local : 
+```
+docker push localhost:5000/pozos:v1
+```
+![image](https://github.com/adda213/mini-projet-docker/assets/123883398/df8c73df-ea56-4aae-bdba-49fe5feaa9f4)
 
-## License
-For open source projects, say how it is licensed.
+Vérifier que le REGISTRY_UI et fonctionnel, et que notre image est bien affichée dans le registry_ui :
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+![image](https://github.com/adda213/mini-projet-docker/assets/123883398/ba8f6c09-fd9c-458d-b30d-6932ea10b211)
+
+FIN.
+
+nom : KADDOUR BRAHIM
+Prénom : Adda Zouaoui
+Formation : Eazytrainning BOOTCAMP-12
