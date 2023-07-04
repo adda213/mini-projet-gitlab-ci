@@ -1,10 +1,11 @@
 # PIPLINE WEBAPP SUR GITLAB-CI
 
 le but de ce projet est de creer conteneriser notre application , et la faire passer par les difrentes stages du pipline qui nous permettre de tester , deployer correctement notre application 
+![pasted image 0](https://github.com/adda213/mini-projet-gitlab-ci/assets/123883398/3ceed45a-b1d8-4a72-b095-944dea317f14)
 
 
 <p align="center">
-  <img src="https://github.com/adda213/mini-projet-K8S/assets/123883398/4ce7c815-98de-45a9-bc6a-54aa2a6e6a7e](https://github.com/adda213/mini-projet-gitlab-ci/assets/123883398/68793d17-3949-4037-a9e7-32e27f2e77b4">
+  <img src="https://github.com/adda213/mini-projet-gitlab-ci/assets/123883398/3ceed45a-b1d8-4a72-b095-944dea317f14">
 </p>
 ------------
 
